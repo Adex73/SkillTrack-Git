@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reportes Académicos</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="reportes.css">
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div>
+            <div class="profile">
+                <img src="https://i.pravatar.cc/150?img=12">
+                <h3>Juan Pérez</h3>
+                <p style="color:#cbd5ff; font-size:13px;">Programación Web</p>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="../mis-cursos/mis-cursos.html"><i class="fas fa-arrow-left"></i> Volver</a></li>
+                <li><a href="../mis-cursos/datos-curso.html"><i class="fas fa-stream"></i> Contenido</a></li>
+                <li><a href="../tareas/tareas.html"><i class="fas fa-tasks"></i> Tareas</a></li>
+                <li><a href="../calificaciones/calificaciones.html"><i class="fas fa-chart-bar"></i> Calificaciones</a></li>
+                <li><a href="#" class="active"><i class="fas fa-chart-line"></i> Reportes</a></li>
+            </ul>
+        </div>
+
+        <div class="logout">
+            <a href="../login/login.html"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <div class="topbar">
+            <h1>Reportes Académicos</h1>
+            <p>Análisis general del rendimiento institucional</p>
+        </div>
+
+        <!-- MÉTRICAS PRINCIPALES -->
+        <div class="stats-grid">
+
+            <div class="stat-card">
+                <i class="fas fa-user-graduate"></i>
+                <h2>1,240</h2>
+                <p>Estudiantes Activos</p>
+            </div>
+
+            <div class="stat-card">
+                <i class="fas fa-chalkboard-teacher"></i>
+                <h2>85</h2>
+                <p>Profesores Registrados</p>
+            </div>
+
+            <div class="stat-card">
+                <i class="fas fa-book-open"></i>
+                <h2>312</h2>
+                <p>Cursos Activos</p>
+            </div>
+
+            <div class="stat-card">
+                <i class="fas fa-chart-bar"></i>
+                <h2>89%</h2>
+                <p>Promedio Institucional</p>
+            </div>
+
+        </div>
+
+        <!-- SECCIÓN DE REPORTES DETALLADOS -->
+        <div class="report-section">
+
+            <div class="report-card">
+                <h3><i class="fas fa-chart-pie"></i> Rendimiento por Carrera</h3>
+                <p>Visualización del promedio general por cada programa académico.</p>
+                <button class="report-btn">Ver Reporte</button>
+            </div>
+
+            <div class="report-card">
+                <h3><i class="fas fa-calendar-check"></i> Tasa de Entrega de Tareas</h3>
+                <p>Porcentaje de cumplimiento de actividades académicas.</p>
+                <button class="report-btn">Ver Reporte</button>
+            </div>
+
+            <div class="report-card">
+                <h3><i class="fas fa-exclamation-triangle"></i> Alumnos en Riesgo</h3>
+                <p>Estudiantes con promedio menor a 70 o con inasistencias.</p>
+                <button class="report-btn alert">Ver Reporte</button>
+            </div>
+
+            <div class="report-card">
+                <h3><i class="fas fa-file-export"></i> Exportar Reportes</h3>
+                <p>Descargar datos en formato PDF o Excel.</p>
+                <button class="report-btn secondary">Exportar</button>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

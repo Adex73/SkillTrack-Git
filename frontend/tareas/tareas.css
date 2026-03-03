@@ -1,0 +1,187 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins', sans-serif;
+}
+
+body{
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.dashboard-container{
+    width:95%;
+    height:90vh;
+    background:#1f2a44;
+    border-radius:20px;
+    display:flex;
+    overflow:hidden;
+    box-shadow:0 20px 50px rgba(0,0,0,0.4);
+}
+
+/* SIDEBAR */
+
+.sidebar{
+    width:260px;
+    background:linear-gradient(180deg,#2d3e66,#24365a);
+    padding:30px 20px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+}
+
+.profile{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.profile img{
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    margin-bottom:10px;
+    border:3px solid #6a5cff;
+}
+
+.profile h3{
+    color:#fff;
+}
+
+.nav-links{
+    list-style:none;
+}
+
+.nav-links li{
+    margin:15px 0;
+}
+
+.nav-links a{
+    text-decoration:none;
+    color:#cbd5ff;
+    display:flex;
+    align-items:center;
+    padding:10px 15px;
+    border-radius:10px;
+    transition:0.3s;
+}
+
+.nav-links a i{
+    margin-right:10px;
+}
+
+.nav-links a:hover,
+.nav-links a.active{
+    background:#6a5cff;
+    color:#fff;
+}
+
+.logout a{
+    text-decoration:none;
+    color:#ff6b81;
+}
+
+/* MAIN */
+
+.main-content{
+    flex:1;
+    padding:30px 40px;
+    color:white;
+    overflow-y:auto;
+}
+
+.topbar{
+    margin-bottom:25px;
+}
+
+/* TAREAS */
+
+.tasks-container{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+.task-card{
+    background:#2a3b63;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 10px 20px rgba(0,0,0,0.3);
+    transition:0.3s;
+}
+
+.task-card:hover{
+    transform:translateY(-5px);
+}
+
+.task-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:15px;
+}
+
+.status{
+    padding:5px 12px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:500;
+}
+
+.pendiente{
+    background:#f39c12;
+}
+
+.entregado{
+    background:#2ecc71;
+}
+
+.vencida{
+    background:#e74c3c;
+}
+
+.task-body p{
+    margin-bottom:8px;
+    font-size:14px;
+    color:#cbd5ff;
+}
+
+.task-footer{
+    margin-top:15px;
+}
+
+/* BOTONES */
+
+.primary-btn{
+    background:#6a5cff;
+    color:white;
+    border:none;
+    padding:10px 15px;
+    border-radius:8px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.primary-btn:hover{
+    background:#5748e5;
+}
+
+.secondary-btn{
+    background:#34495e;
+    color:white;
+    border:none;
+    padding:10px 15px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.disabled-btn{
+    background:#555;
+    color:#aaa;
+    border:none;
+    padding:10px 15px;
+    border-radius:8px;
+}

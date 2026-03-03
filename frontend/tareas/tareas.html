@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tareas - Programación Web</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="tareas.css">
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+
+        <div>
+            <div class="profile">
+                <img src="https://i.pravatar.cc/150?img=12">
+                <h3>Juan Pérez</h3>
+                <p style="color:#cbd5ff; font-size:13px;">Programación Web</p>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="../mis-cursos/mis-cursos.html"><i class="fas fa-arrow-left"></i> Volver</a></li>
+                <li><a href="../mis-cursos/datos-curso.html"><i class="fas fa-stream"></i> Contenido</a></li>
+                <li><a href="#" class="active"><i class="fas fa-tasks"></i> Tareas</a></li>
+                <li><a href="../calificaciones/calificaciones.html"><i class="fas fa-chart-bar"></i> Calificaciones</a></li>
+                <li><a href="../reportes/reportes.html"><i class="fas fa-chart-line"></i> Reportes</a></li>
+            </ul>
+        </div>
+
+        <div class="logout">
+            <a href="../login/login.html"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+        </div>
+
+    </div>
+
+    <!-- MAIN -->
+    <div class="main-content">
+
+        <div class="topbar">
+            <h1>Tareas del Curso</h1>
+        </div>
+
+        <div class="tasks-container">
+
+            <!-- TAREA -->
+            <div class="task-card">
+                <div class="task-header">
+                    <h3>Proyecto HTML Básico</h3>
+                    <span class="status pendiente">Pendiente</span>
+                </div>
+
+                <div class="task-body">
+                    <p>Crear una página web usando etiquetas básicas de HTML.</p>
+                    <p><i class="fas fa-calendar-alt"></i> Fecha límite: 25 Septiembre 2026</p>
+                </div>
+
+                <div class="task-footer">
+                    <button class="primary-btn">
+                        <i class="fas fa-upload"></i> Entregar Tarea
+                    </button>
+                </div>
+            </div>
+
+            <div class="task-card">
+                <div class="task-header">
+                    <h3>Ejercicio Flexbox</h3>
+                    <span class="status entregado">Entregado</span>
+                </div>
+
+                <div class="task-body">
+                    <p>Diseñar un layout responsivo usando Flexbox.</p>
+                    <p><i class="fas fa-calendar-alt"></i> Fecha límite: 10 Septiembre 2026</p>
+                </div>
+
+                <div class="task-footer">
+                    <button class="secondary-btn">
+                        <i class="fas fa-eye"></i> Ver Entrega
+                    </button>
+                </div>
+            </div>
+
+            <div class="task-card">
+                <div class="task-header">
+                    <h3>Proyecto Final</h3>
+                    <span class="status vencida">Vencida</span>
+                </div>
+
+                <div class="task-body">
+                    <p>Desarrollar un sitio web completo con HTML, CSS y JS.</p>
+                    <p><i class="fas fa-calendar-alt"></i> Fecha límite: 1 Septiembre 2026</p>
+                </div>
+
+                <div class="task-footer">
+                    <button class="disabled-btn" disabled>
+                        <i class="fas fa-lock"></i> Cerrada
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

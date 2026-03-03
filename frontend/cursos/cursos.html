@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestión de Cursos - SkillTrack</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="cursos.css">
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+    <div class="sidebar">
+        <div>
+            <div class="profile">
+                <img src="https://i.pravatar.cc/150?img=15">
+                <h3>Administrador</h3>
+                <p style="color:#cbd5ff; font-size:13px;">Panel Administrativo</p>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="../index/index.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="../registro/registro.html"><i class="fas fa-users"></i> Usuarios</a></li>
+                <li><a href="../universidades/universidades.html"><i class="fas fa-university"></i> Universidades</a></li>
+                <li><a href="../carreras/carreras.html"><i class="fas fa-graduation-cap"></i> Carreras</a></li>
+                <li><a href="#" class="active"><i class="fas fa-book"></i> Cursos</a></li>
+            </ul>
+        </div>
+
+        <div class="logout">
+            <a href="../login/login.html"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+
+        <div class="topbar">
+            <h1>Gestión de Cursos</h1>
+        </div>
+
+        <div class="content-grid">
+
+            <!-- FORMULARIO -->
+            <div class="card-box">
+                <h2>Registrar Curso</h2>
+
+                <form id="cursoForm">
+
+                    <div class="input-group">
+                        <label>Materia</label>
+                        <input type="text" id="nombreMateria" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Profesor</label>
+                        <select id="profesor" required></select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Grupo</label>
+                        <input type="text" id="grupo" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Carrera</label>
+                        <select id="carrera" required></select>
+                    </div>
+
+                    <button type="submit">
+                        <i class="fas fa-plus-circle"></i> Registrar Curso
+                    </button>
+
+                </form>
+            </div>
+
+            <!-- LISTA -->
+            <div class="card-box">
+                <h2>Cursos Registrados</h2>
+                <ul id="listaCursos" class="lista"></ul>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+async function cargarProfesores() {
+    const res = await fetch("http://localhost:3000/profesores");
+    const data = await res.json();
+    const select = document.getElementById("profesor");
+    select.innerHTML = "";
+    data.forEach(p => {
+        select.innerHTML += `<option value="${p._id}">${p.nombre}</option>`;
+    });
+}
+
+async function cargarCarreras() {
+    const res = await fetch("http://localhost:3000/carreras");
+    const data = await res.json();
+    const select = document.getElementById("carrera");
+    select.innerHTML = "";
+    data.forEach(c => {
+        select.innerHTML += `<option value="${c._id}">${c.nombre}</option>`;
+    });
+}
+
+async function cargarCursos() {
+    const res = await fetch("http://localhost:3000/cursos");
+    const data = await res.json();
+
+    const lista = document.getElementById("listaCursos");
+    lista.innerHTML = "";
+
+    data.forEach(c => {
+        lista.innerHTML += `
+            <li>
+                <div>
+                    <strong>${c.nombreMateria}</strong><br>
+                    ${c.carrera.nombre} - Grupo ${c.grupo}<br>
+                    Prof: ${c.profesor.nombre}
+                </div>
+                <button onclick="eliminarCurso('${c._id}')">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </li>
+        `;
+    });
+}
+
+document.getElementById("cursoForm").addEventListener("submit", async (e)=>{
+    e.preventDefault();
+
+    const data = {
+        nombreMateria: nombreMateria.value,
+        profesor: profesor.value,
+        grupo: grupo.value,
+        carrera: carrera.value
+    };
+
+    const res = await fetch("http://localhost:3000/cursos",{
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify(data)
+    });
+
+    const result = await res.json();
+    alert(result.mensaje || result.error);
+    cargarCursos();
+});
+
+async function eliminarCurso(id){
+    await fetch(`http://localhost:3000/cursos/${id}`,{ method:"DELETE" });
+    cargarCursos();
+}
+
+cargarProfesores();
+cargarCarreras();
+cargarCursos();
+</script>
+
+</body>
+</html>

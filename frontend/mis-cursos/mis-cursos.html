@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mis Cursos - SkillTrack</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="mis-cursos.css">
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+
+        <div>
+            <div class="profile">
+                <img src="https://i.pravatar.cc/150?img=12">
+                <h3>Juan Pérez</h3>
+                <p style="color:#cbd5ff; font-size:13px;">Programación Web</p>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="../index/index.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="#" class="active"><i class="fas fa-book"></i> Mis Cursos</a></li>
+                <li><a href="../registro/registro.html"><i class="fas fa-users"></i> Usuarios</a></li>
+            </ul>
+        </div>
+
+        <div class="logout">
+            <a href="../login/login.html"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+        </div>
+
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <div class="topbar">
+            <h1>Mis Cursos</h1>
+        </div>
+
+        <!-- GRID DE CURSOS -->
+        <div class="courses-grid">
+
+            <!-- TARJETA CURSO -->
+            <div class="course-card">
+                <div class="course-header">
+                    <h3>Programación Web</h3>
+                    <span class="grupo">Grupo A1</span>
+                </div>
+
+                <div class="course-body">
+                    <p><i class="fas fa-user"></i> Profesor: Carlos Mendoza</p>
+                    <p><i class="fas fa-graduation-cap"></i> Ingeniería en Sistemas</p>
+                </div>
+
+              <div class="course-footer">
+          <button onclick="window.location.href='datos-curso.html'">
+        <i class="fas fa-eye"></i> Ver Curso
+    </button>
+</div>
+            </div>
+
+            <div class="course-card">
+                <div class="course-header">
+                    <h3>Base de Datos</h3>
+                    <span class="grupo">Grupo B2</span>
+                </div>
+
+                <div class="course-body">
+                    <p><i class="fas fa-user"></i> Profesor: Laura Torres</p>
+                    <p><i class="fas fa-graduation-cap"></i> Ingeniería en Sistemas</p>
+                </div>
+
+                <div class="course-footer">
+                    <button><i class="fas fa-eye"></i> Ver Curso</button>
+                </div>
+            </div>
+
+            <div class="course-card">
+                <div class="course-header">
+                    <h3>Matemáticas Discretas</h3>
+                    <span class="grupo">Grupo C3</span>
+                </div>
+
+                <div class="course-body">
+                    <p><i class="fas fa-user"></i> Profesor: Ana López</p>
+                    <p><i class="fas fa-graduation-cap"></i> Ingeniería en Sistemas</p>
+                </div>
+
+                <div class="course-footer">
+                    <button><i class="fas fa-eye"></i> Ver Curso</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

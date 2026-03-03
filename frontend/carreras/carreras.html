@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestión de Carreras - SkillTrack</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="carreras.css">
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+
+        <div>
+            <div class="profile">
+                <img src="https://i.pravatar.cc/150?img=15" alt="Usuario">
+                <h3>Administrador</h3>
+                <p style="color:#cbd5ff; font-size:13px;">Panel Administrativo</p>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="../index/index.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="../registro/registro.html"><i class="fas fa-users"></i> Usuarios</a></li>
+                <li><a href="../universidades/universidades.html"><i class="fas fa-university"></i> Universidades</a></li>
+                <li><a href="#" class="active"><i class="fas fa-graduation-cap"></i> Carreras</a></li>
+                <li><a href="../cursos/cursos.html"><i class="fas fa-book"></i> Cursos</a></li>
+            </ul>
+        </div>
+
+        <div class="logout">
+            <a href="../login/login.html"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+        </div>
+
+    </div>
+
+    <!-- MAIN -->
+    <div class="main-content">
+
+        <div class="topbar">
+            <h1>Gestión de Carreras</h1>
+        </div>
+
+        <div class="content-grid">
+
+            <!-- FORMULARIO -->
+            <div class="card-box">
+                <h2>Registrar Carrera</h2>
+
+                <form id="carreraForm">
+
+                    <div class="input-group">
+                        <label>Universidad</label>
+                        <select id="universidad" required>
+                            <option value="">Seleccione Universidad</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Nombre de la Carrera</label>
+                        <input type="text" id="nombreCarrera" required>
+                    </div>
+
+                    <button type="submit">
+                        <i class="fas fa-plus-circle"></i> Registrar Carrera
+                    </button>
+
+                </form>
+            </div>
+
+            <!-- LISTA -->
+            <div class="card-box">
+                <h2>Carreras Registradas</h2>
+                <ul id="listaCarreras" class="lista"></ul>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+async function cargarUniversidades() {
+    const res = await fetch("http://localhost:3000/universidades");
+    const data = await res.json();
+
+    const select = document.getElementById("universidad");
+    select.innerHTML = `<option value="">Seleccione Universidad</option>`;
+
+    data.forEach(u => {
+        select.innerHTML += `<option value="${u._id}">${u.nombre}</option>`;
+    });
+}
+
+async function cargarCarreras(universidadId) {
+    if(!universidadId) return;
+
+    const res = await fetch(`http://localhost:3000/carreras/${universidadId}`);
+    const data = await res.json();
+
+    const lista = document.getElementById("listaCarreras");
+    lista.innerHTML = "";
+
+    data.forEach(c => {
+        lista.innerHTML += `
+            <li>
+                ${c.nombre}
+                <button onclick="eliminarCarrera('${c._id}')">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </li>
+        `;
+    });
+}
+
+document.getElementById("universidad").addEventListener("change", function(){
+    cargarCarreras(this.value);
+});
+
+document.getElementById("carreraForm").addEventListener("submit", async (e)=>{
+    e.preventDefault();
+
+    const nombre = document.getElementById("nombreCarrera").value;
+    const universidadId = document.getElementById("universidad").value;
+
+    const res = await fetch("http://localhost:3000/carreras",{
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({ nombre, universidadId })
+    });
+
+    const data = await res.json();
+    alert(data.mensaje || data.error);
+
+    document.getElementById("carreraForm").reset();
+    cargarCarreras(universidadId);
+});
+
+async function eliminarCarrera(id){
+    if(!confirm("¿Eliminar carrera?")) return;
+
+    await fetch(`http://localhost:3000/carreras/${id}`,{
+        method:"DELETE"
+    });
+
+    const universidadId = document.getElementById("universidad").value;
+    cargarCarreras(universidadId);
+}
+
+cargarUniversidades();
+
+</script>
+
+</body>
+</html>
