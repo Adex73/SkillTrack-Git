@@ -51,6 +51,13 @@ body{
     color:#fff;
 }
 
+.profile p{
+    color:#cbd5ff;
+    font-size:13px;
+}
+
+/* NAV */
+
 .nav-links{
     list-style:none;
 }
@@ -97,66 +104,40 @@ body{
     margin-bottom:30px;
 }
 
-/* GRID */
-
-.content-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:25px;
-}
-
 /* CARDS */
 
 .card-box{
     background:#2a3b63;
-    padding:25px;
+    padding:20px;
     border-radius:15px;
+    margin-bottom:20px;
     box-shadow:0 10px 20px rgba(0,0,0,0.3);
 }
 
-.card-box h2{
-    margin-bottom:20px;
-}
+/* BUSCADOR */
 
-/* INPUT */
-
-.input-group{
-    display:flex;
-    flex-direction:column;
-    margin-bottom:20px;
-}
-
-.input-group label{
-    margin-bottom:5px;
-    font-size:13px;
-    color:#cbd5ff;
-}
-
-.input-group input,
-.input-group select{
+.card-box input{
+    width:100%;
     padding:12px;
-    border-radius:8px;
     border:none;
+    border-radius:8px;
+    margin-bottom:10px;
     background:#1f2a44;
     color:white;
-    appearance: none; /* quita estilo default */
 }
 
-.input-group select{
-    cursor:pointer;
-}
-
-button{
-    background:#6a5cff;
-    color:white;
-    padding:10px 15px;
+.card-box button{
+    width:100%;
+    padding:10px;
     border:none;
     border-radius:8px;
+    background:#6a5cff;
+    color:white;
     cursor:pointer;
     transition:0.3s;
 }
 
-button:hover{
+.card-box button:hover{
     background:#5748e5;
 }
 
@@ -168,8 +149,8 @@ button:hover{
 
 .lista li{
     background:#1f2a44;
-    padding:10px;
-    border-radius:8px;
+    padding:12px;
+    border-radius:10px;
     margin-bottom:10px;
     display:flex;
     justify-content:space-between;
@@ -177,5 +158,40 @@ button:hover{
 }
 
 .lista li button{
-    background:#ff6b81;
+    background:#6a5cff;
+    border:none;
+    padding:8px 12px;
+    border-radius:8px;
+    color:white;
+    cursor:pointer;
+}
+
+.lista li button:hover{
+    background:#5748e5;
+}
+
+.btn-add{
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-remove{
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-add:hover{
+    background: #45a049;
+}
+
+.btn-remove:hover{
+    background: #c0392b;
 }

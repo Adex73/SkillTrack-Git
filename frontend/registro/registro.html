@@ -21,8 +21,8 @@
         <div>
             <div class="profile">
                 <img src="https://i.pravatar.cc/150?img=15" alt="Usuario">
-                <h3>Administrador</h3>
-                <p style="color:#cbd5ff; font-size:13px;">Panel Administrativo</p>
+                 <h3 id="nombreUsuario">Usuario</h3>
+                 <p id="rolUsuario" style="color:#cbd5ff; font-size:13px;">Rol</p>
             </div>
 
             <ul class="nav-links">
@@ -121,6 +121,22 @@
 </div>
 
 <script>
+const usuario = JSON.parse(localStorage.getItem("usuario"));
+if (!usuario) {
+    window.location.href = "../login/login.html";
+}
+// Mostrar nombre
+document.getElementById("nombreUsuario").innerText = usuario.nombre;
+// Mostrar rol
+document.getElementById("rolUsuario").innerText =
+    usuario.rol.charAt(0).toUpperCase() + usuario.rol.slice(1);
+// Cerrar sesión
+function logout(){
+    localStorage.removeItem("usuario");
+    window.location.href = "../login/login.html";
+}
+
+
 document.addEventListener("DOMContentLoaded", async () => {
 
     const universidadSelect = document.getElementById("universidad");

@@ -19,8 +19,8 @@
         <div>
             <div class="profile">
                 <img src="https://i.pravatar.cc/150?img=12">
-                <h3>Juan Pérez</h3>
-                <p style="color:#cbd5ff; font-size:13px;">Programación Web</p>
+                <h3 id="nombreUsuario">Usuario</h3>
+                <p id="rolUsuario" style="color:#cbd5ff; font-size:13px;">Rol</p>
             </div>
 
             <ul class="nav-links">
@@ -31,7 +31,7 @@
         </div>
 
         <div class="logout">
-            <a href="login/login.html"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+            <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
         </div>
 
     </div>
@@ -40,7 +40,7 @@
     <div class="main-content">
 
         <div class="topbar">
-            <h1>Bienvenido, Juan Pérez 👋</h1>
+            <h1 id="bienvenida">Bienvenido 👋</h1>
             <i class="fas fa-bars menu-icon"></i>
         </div>
 
@@ -93,6 +93,27 @@
     </div>
 
 </div>
+
+
+<script>
+const usuario = JSON.parse(localStorage.getItem("usuario"));
+if (!usuario) {
+    window.location.href = "../login/login.html";
+}
+// Mostrar nombre
+document.getElementById("nombreUsuario").innerText = usuario.nombre;
+// Mostrar bienvenida
+document.getElementById("bienvenida").innerText = "Bienvenido, " + usuario.nombre + " 👋";
+// Mostrar rol
+document.getElementById("rolUsuario").innerText = usuario.rol;
+
+//Cerramos la sesion
+function logout(){
+    localStorage.removeItem("usuario");
+    window.location.href = "../login/login.html";
+}
+</script>
+
 
 </body>
 </html>

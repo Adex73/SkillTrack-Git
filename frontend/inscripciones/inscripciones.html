@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inscripciones - SkillTrack</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="inscripciones.css">
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+
+        <div>
+            <div class="profile">
+                <img src="https://i.pravatar.cc/150?img=12">
+                <h3 id="nombreUsuario">Usuario</h3>
+                <p id="rolUsuario">Rol</p>
+            </div>
+
+            <ul class="nav-links">
+               <li><a href="../mis-cursos/mis-cursos.html"><i class="fas fa-arrow-left"></i> Volver</a></li>
+                <li><a href="../mis-cursos/datos-curso.html"><i class="fas fa-stream"></i> Contenido</a></li>
+                <li><a href="../tareas/tareas.html"><i class="fas fa-tasks"></i> Tareas</a></li>
+                <li><a href="../calificaciones/calificaciones.html"><i class="fas fa-chart-bar"></i> Calificaciones</a></li>
+                <li><a href="../reportes/reportes.html"><i class="fas fa-chart-line"></i> Reportes</a></li>
+                <li><a href="#" class="active"><i class="fas fa-user-plus"></i> Inscripciones</a></li>
+            </ul>
+        </div>
+
+        <div class="logout">
+            <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+        </div>
+
+    </div>
+
+    <!-- MAIN -->
+    <div class="main-content">
+
+        <div class="topbar">
+            <h1>Inscribir Estudiantes</h1>
+        </div>
+
+        <!-- BUSCADOR -->
+        <div class="card-box">
+            <input type="text" id="busqueda" placeholder="Buscar por nombre o matrícula">
+            <button onclick="buscar()">
+                <i class="fas fa-search"></i> Buscar
+            </button>
+        </div>
+
+        <!-- RESULTADOS -->
+        <div class="card-box">
+            <h2>Resultados</h2>
+            <ul id="resultados" class="lista"></ul>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+const usuario = JSON.parse(localStorage.getItem("usuario"));
+const cursoId = localStorage.getItem("cursoId");
+
+let inscritos = []; // 🔥 guardamos inscritos
+
+if (!usuario || usuario.rol !== "profesor") {
+    window.location.href = "../login/login.html";
+}
+
+// 🔥 OBTENER INSCRITOS
+async function cargarInscritos(){
+    const res = await fetch(`http://localhost:3000/inscripciones/${cursoId}`);
+    inscritos = await res.json();
+}
+
+// 🔥 VERIFICAR SI YA ESTÁ INSCRITO
+function estaInscrito(estudianteId){
+    return inscritos.some(i => i.estudianteId === estudianteId);
+}
+
+//CARGAR ESTUDIANTES
+async function cargarEstudiantes() {
+    await cargarInscritos(); // 🔥 primero inscripciones
+
+    const res = await fetch(`http://localhost:3000/estudiantes/buscar?texto=&universidad=${usuario.universidad}`);
+    const data = await res.json();
+
+    renderResultados(data);
+}
+
+function renderResultados(data){
+    const lista = document.getElementById("resultados");
+    lista.innerHTML = "";
+
+    if(data.length === 0){
+        lista.innerHTML = "<li>No se encontraron estudiantes</li>";
+        return;
+    }
+
+    data.forEach(e => {
+
+        const inscrito = estaInscrito(e._id);
+
+        lista.innerHTML += `
+        <li>
+            <div>
+                <strong>${e.nombre}</strong><br>
+                Matrícula: ${e.matricula}
+            </div>
+
+            <button 
+                class="${inscrito ? 'btn-remove' : 'btn-add'}"
+                onclick="toggleInscripcion('${e._id}')"
+            >
+                ${
+                    inscrito 
+                    ? '<i class="fas fa-user-minus"></i> Quitar'
+                    : '<i class="fas fa-user-plus"></i> Inscribir'
+                }
+            </button>
+        </li>
+        `;
+    });
+}
+
+// 🔥 BUSCAR
+async function buscar(){
+    const texto = document.getElementById("busqueda").value.trim();
+
+    await cargarInscritos();
+
+    const res = await fetch(`http://localhost:3000/estudiantes/buscar?texto=${texto || ""}&universidad=${usuario.universidad}`);
+    const data = await res.json();
+
+    renderResultados(data);
+}
+
+// 🔥 TOGGLE INSCRIPCIÓN (MAGIA)
+async function toggleInscripcion(estudianteId){
+
+    const inscrito = estaInscrito(estudianteId);
+
+    if(inscrito){
+        // ❌ DESINSCRIBIR
+        const res = await fetch("http://localhost:3000/inscripciones",{
+            method:"DELETE",
+            headers:{ "Content-Type":"application/json" },
+            body: JSON.stringify({ cursoId, estudianteId })
+        });
+
+        const data = await res.json();
+        alert(data.mensaje || data.error);
+
+    }else{
+        // ✅ INSCRIBIR
+        const res = await fetch("http://localhost:3000/inscripciones",{
+            method:"POST",
+            headers:{ "Content-Type":"application/json" },
+            body: JSON.stringify({ cursoId, estudianteId })
+        });
+
+        const data = await res.json();
+        alert(data.mensaje || data.error);
+    }
+
+    // 🔥 refrescar UI
+    await cargarEstudiantes();
+}
+
+// INIT
+cargarEstudiantes();
+
+// Mostrar datos
+document.getElementById("nombreUsuario").innerText = usuario.nombre;
+document.getElementById("rolUsuario").innerText =
+    usuario.rol.charAt(0).toUpperCase() + usuario.rol.slice(1);
+
+// Logout
+function logout(){
+    localStorage.removeItem("usuario");
+    window.location.href = "../login/login.html";
+}
+</script>
+
+</body>
+</html>

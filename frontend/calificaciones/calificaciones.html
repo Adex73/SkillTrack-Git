@@ -19,8 +19,8 @@
         <div>
             <div class="profile">
                 <img src="https://i.pravatar.cc/150?img=12">
-                <h3>Juan Pérez</h3>
-                <p style="color:#cbd5ff; font-size:13px;">Programación Web</p>
+                 <h3 id="nombreUsuario">Usuario</h3>
+                 <p id="rolUsuario" style="color:#cbd5ff; font-size:13px;">Rol</p>
             </div>
 
             <ul class="nav-links">
@@ -29,6 +29,7 @@
                 <li><a href="../tareas/tareas.html"><i class="fas fa-tasks"></i> Tareas</a></li>
                 <li><a href="#" class="active"><i class="fas fa-chart-bar"></i> Calificaciones</a></li>
                 <li><a href="../reportes/reportes.html"><i class="fas fa-chart-line"></i> Reportes</a></li>
+                <li><a href="../inscripciones/inscripciones.html"><i class="fas fa-user-plus"></i> Inscripciones</a></li>
 
             </ul>
         </div>
@@ -100,6 +101,23 @@
     </div>
 
 </div>
+
+<script>
+const usuario = JSON.parse(localStorage.getItem("usuario"));
+if (!usuario) {
+    window.location.href = "../login/login.html";
+}
+// Mostrar nombre
+document.getElementById("nombreUsuario").innerText = usuario.nombre;
+// Mostrar rol
+document.getElementById("rolUsuario").innerText =
+    usuario.rol.charAt(0).toUpperCase() + usuario.rol.slice(1);
+// Cerrar sesión
+function logout(){
+    localStorage.removeItem("usuario");
+    window.location.href = "../login/login.html";
+}
+</script>
 
 </body>
 </html>

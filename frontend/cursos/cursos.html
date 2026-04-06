@@ -18,8 +18,8 @@
         <div>
             <div class="profile">
                 <img src="https://i.pravatar.cc/150?img=15">
-                <h3>Administrador</h3>
-                <p style="color:#cbd5ff; font-size:13px;">Panel Administrativo</p>
+                <h3 id="nombreUsuario">Usuario</h3>
+                <p id="rolUsuario" style="color:#cbd5ff; font-size:13px;">Rol</p>
             </div>
 
             <ul class="nav-links">
@@ -32,7 +32,7 @@
         </div>
 
         <div class="logout">
-            <a href="../login/login.html"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+            <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
         </div>
     </div>
 
@@ -70,6 +70,35 @@
                         <select id="carrera" required></select>
                     </div>
 
+                    <div class="input-group">
+                        <label>Semestre</label>
+                        <select id="semestre" required>
+                            <option value="">Selecciona semestre</option>
+                            <option value="1">Primero</option>
+                            <option value="2">Segundo</option>
+                            <option value="3">Tercero</option>
+                            <option value="4">Cuarto</option>
+                            <option value="5">Quinto</option>
+                            <option value="6">Sexto</option>
+                            <option value="7">Séptimo</option>
+                            <option value="8">Octavo</option>
+                            <option value="9">Noveno</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Universidad</label>
+                        <select id="universidad" required></select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Activo</label>
+                        <select id="activo">
+                          <option value="true">Activo</option>
+                          <option value="false">Inactivo</option>
+                        </select>
+                    </div>
+
                     <button type="submit">
                         <i class="fas fa-plus-circle"></i> Registrar Curso
                     </button>
@@ -90,25 +119,66 @@
 </div>
 
 <script>
+// =======================
+// USUARIO
+// =======================
+const usuario = JSON.parse(localStorage.getItem("usuario"));
+if (!usuario) {
+    window.location.href = "../login/login.html";
+}
+
+document.getElementById("nombreUsuario").innerText = usuario.nombre;
+document.getElementById("rolUsuario").innerText =
+    usuario.rol.charAt(0).toUpperCase() + usuario.rol.slice(1);
+
+function logout(){
+    localStorage.removeItem("usuario");
+    window.location.href = "../login/login.html";
+}
+
+// =======================
+// CARGAS
+// =======================
+
 async function cargarProfesores() {
     const res = await fetch("http://localhost:3000/profesores");
     const data = await res.json();
+
     const select = document.getElementById("profesor");
-    select.innerHTML = "";
+    select.innerHTML = `<option value="">Selecciona un profesor</option>`;
+
     data.forEach(p => {
         select.innerHTML += `<option value="${p._id}">${p.nombre}</option>`;
+    });
+}
+
+async function cargarUniversidades() {
+    const res = await fetch("http://localhost:3000/universidades");
+    const data = await res.json();
+
+    const select = document.getElementById("universidad");
+    select.innerHTML = `<option value="">Selecciona una universidad</option>`;
+
+    data.forEach(u => {
+        select.innerHTML += `<option value="${u._id}">${u.nombre}</option>`;
     });
 }
 
 async function cargarCarreras() {
     const res = await fetch("http://localhost:3000/carreras");
     const data = await res.json();
+
     const select = document.getElementById("carrera");
-    select.innerHTML = "";
+    select.innerHTML = `<option value="">Selecciona una carrera</option>`;
+
     data.forEach(c => {
         select.innerHTML += `<option value="${c._id}">${c.nombre}</option>`;
     });
 }
+
+// =======================
+// CURSOS
+// =======================
 
 async function cargarCursos() {
     const res = await fetch("http://localhost:3000/cursos");
@@ -119,29 +189,44 @@ async function cargarCursos() {
 
     data.forEach(c => {
         lista.innerHTML += `
-            <li>
-                <div>
-                    <strong>${c.nombreMateria}</strong><br>
-                    ${c.carrera.nombre} - Grupo ${c.grupo}<br>
-                    Prof: ${c.profesor.nombre}
-                </div>
-                <button onclick="eliminarCurso('${c._id}')">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </li>
+        <li>
+            <div>
+                <strong>${c.nombre}</strong><br>
+                ${c.carreraId?.nombre || "Sin carrera"} - ${c.universidadId?.nombre || "Sin universidad"}<br>
+                Grupo ${c.grupo} | Semestre ${c.semestre}<br>
+                Prof: ${c.profesorId?.nombre || "Sin profesor"}<br>
+                Estado: ${c.activo ? "Activo" : "Inactivo"}
+            </div>
+            <button onclick="eliminarCurso('${c._id}')">
+                <i class="fas fa-trash"></i>
+            </button>
+        </li>
         `;
     });
 }
+
+// =======================
+// FORM
+// =======================
 
 document.getElementById("cursoForm").addEventListener("submit", async (e)=>{
     e.preventDefault();
 
     const data = {
-        nombreMateria: nombreMateria.value,
-        profesor: profesor.value,
-        grupo: grupo.value,
-        carrera: carrera.value
+        nombre: document.getElementById("nombreMateria").value.trim(),
+        grupo: document.getElementById("grupo").value.trim(),
+        carreraId: document.getElementById("carrera").value,
+        universidadId: document.getElementById("universidad").value,
+        profesorId: document.getElementById("profesor").value,
+        semestre: document.getElementById("semestre").value,
+        activo: document.getElementById("activo").value === "true"
     };
+
+    // VALIDACIÓN FRONT
+    if (!data.nombre || !data.grupo || !data.carreraId || !data.universidadId || !data.profesorId || !data.semestre) {
+        alert("Todos los campos son obligatorios");
+        return;
+    }
 
     const res = await fetch("http://localhost:3000/cursos",{
         method:"POST",
@@ -151,17 +236,31 @@ document.getElementById("cursoForm").addEventListener("submit", async (e)=>{
 
     const result = await res.json();
     alert(result.mensaje || result.error);
+
+    document.getElementById("cursoForm").reset();
     cargarCursos();
 });
 
+// =======================
+// DELETE
+// =======================
+
 async function eliminarCurso(id){
+    if(!confirm("¿Eliminar curso?")) return;
+
     await fetch(`http://localhost:3000/cursos/${id}`,{ method:"DELETE" });
     cargarCursos();
 }
 
+// =======================
+// INIT
+// =======================
+
 cargarProfesores();
 cargarCarreras();
+cargarUniversidades();
 cargarCursos();
+
 </script>
 
 </body>
