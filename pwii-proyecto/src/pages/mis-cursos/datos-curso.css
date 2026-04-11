@@ -1,0 +1,236 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins', sans-serif;
+}
+
+body{
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.dashboard-container{
+    width:95%;
+    height:90vh;
+    background:#1f2a44;
+    border-radius:20px;
+    display:flex;
+    overflow:hidden;
+    box-shadow:0 20px 50px rgba(0,0,0,0.4);
+}
+
+/* SIDEBAR */
+
+.sidebar{
+    width:260px;
+    background:linear-gradient(180deg,#2d3e66,#24365a);
+    padding:30px 20px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+}
+
+.profile{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.profile img{
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    margin-bottom:10px;
+    border:3px solid #6a5cff;
+}
+
+.profile h3{
+    color:#fff;
+}
+
+.nav-links{
+    list-style:none;
+}
+
+.nav-links li{
+    margin:15px 0;
+}
+
+.nav-links a{
+    text-decoration:none;
+    color:#cbd5ff;
+    display:flex;
+    align-items:center;
+    padding:10px 15px;
+    border-radius:10px;
+    transition:0.3s;
+}
+
+.nav-links a i{
+    margin-right:10px;
+}
+
+.nav-links a:hover,
+.nav-links a.active{
+    background:#6a5cff;
+    color:#fff;
+}
+
+.logout a{
+    text-decoration:none;
+    color:#ff6b81;
+}
+
+/* MAIN */
+
+.main-content{
+    flex:1;
+    padding:30px 40px;
+    color:white;
+    overflow-y:auto;
+}
+
+/* BANNER */
+
+.course-banner{
+    background:#2a3b63;
+    padding:25px;
+    border-radius:15px;
+    margin-bottom:30px;
+    box-shadow:0 10px 20px rgba(0,0,0,0.3);
+}
+
+.course-banner h1{
+    margin-bottom:8px;
+}
+
+/* CONTENIDO */
+
+.course-content{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+/* MÓDULO */
+
+.module-card{
+    background:#2a3b63;
+    border-radius:15px;
+    padding:20px;
+    box-shadow:0 10px 20px rgba(0,0,0,0.3);
+}
+
+.module-header{
+    margin-bottom:15px;
+}
+
+.module-header h3{
+    font-size:18px;
+}
+
+.module-list{
+    list-style:none;
+}
+
+.module-list li{
+    background:#1f2a44;
+    padding:10px;
+    border-radius:8px;
+    margin-bottom:10px;
+    font-size:14px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    transition:0.2s;
+}
+
+.module-list li:hover{
+    background:#314372;
+}
+
+.add-tema{
+    margin-top:10px;
+    display:flex;
+    gap:10px;
+}
+
+.add-tema input{
+    flex:1;
+    padding:8px;
+    border-radius:8px;
+    border:none;
+}
+
+.add-tema button{
+    background:#6a5cff;
+    color:white;
+    border:none;
+    padding:8px 12px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.tema-detalle{
+    background:#2a3b63;
+    padding:20px;
+    border-radius:15px;
+}
+
+.btn-back{
+    margin-bottom:10px;
+    background:none;
+    color:#cbd5ff;
+    border:none;
+    cursor:pointer;
+}
+
+.tema-body{
+    margin-top:15px;
+    line-height:1.6;
+}
+
+.edit-tema{
+    margin-top:20px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.edit-tema textarea{
+    min-height:120px;
+    border-radius:10px;
+    padding:10px;
+}
+
+.tema-body a{
+    color:#ffd166; /* amarillo elegante */
+    font-weight:500;
+    text-decoration:none;
+    display:inline-block;
+    margin-top:10px;
+    transition:0.2s;
+}
+
+.tema-body a:hover{
+    color:#ffb703; /* más intenso al pasar mouse */
+    text-decoration:underline;
+}
+
+.btn-delete{
+    background:#ff4d6d;
+    color:white;
+    border:none;
+    padding:10px;
+    border-radius:8px;
+    cursor:pointer;
+    margin-top:10px;
+    transition:0.2s;
+}
+
+.btn-delete:hover{
+    background:#e63946;
+}
