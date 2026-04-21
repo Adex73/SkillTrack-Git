@@ -17,11 +17,6 @@ if (!fs.existsSync("./uploads")) {
     fs.mkdirSync("./uploads");
 }
 
-// Servir frontend
-app.use(express.static(path.join(__dirname, "../frontend")));
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend/login/login.html"));
-});
 
 // CONEXIÓN A MONGODB
 mongoose.connect("mongodb://localhost:27017/skilltrack")
@@ -192,7 +187,7 @@ const Entrega = mongoose.model("Entrega", EntregaSchema);
 //SUBIR ARCHIVOS
 app.post("/upload", upload.single("archivo"), (req, res) => {
     try {
-        const fileUrl = `http://localhost:3000/uploads/${req.file.filename}`;
+        const fileUrl = `http://localhost:5000/uploads/${req.file.filename}`;
 
         res.json({
             mensaje: "Archivo subido",
@@ -799,9 +794,21 @@ app.get("/entregas/:estudianteId", async (req, res) => {
 });
 
 
+
+
+// Servir frontend
+app.use(express.static(path.join(__dirname, "../build")));
+
+// Rutas de la API van aquí...
+
+// Manejar cualquier otra ruta devolviendo el index.html de React (para que React Router funcione)
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../build", "index.html"));
+});
+
 // =======================
 // INICIAR SERVIDOR
 // =======================
-app.listen(3000, () => {
-    console.log("🔥 Servidor corriendo en http://localhost:3000");
+app.listen(5000, () => {
+    console.log("🔥 Servidor corriendo en http://localhost:5000");
 });
