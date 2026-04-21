@@ -61,7 +61,13 @@ function MisCursos() {
                     <ul className="nav-links">
                         <li><Link to="/dashboard"><i className="fas fa-home"></i> Dashboard</Link></li>
                         <li><Link to="/mis-cursos" className="active"><i className="fas fa-book"></i> Mis Cursos</Link></li>
-                        <li><Link to="/usuarios"><i className="fas fa-users"></i> Usuarios</Link></li>
+                        {(usuario.rol === "administrador" || usuario.rol === "profesor") && (
+                            <li>
+                                <Link to="/usuarios">
+                                    <i className="fas fa-users"></i> Usuarios
+                                </Link>
+                            </li>
+                        )}
                     </ul>
                 </div>
                 <div className="logout">

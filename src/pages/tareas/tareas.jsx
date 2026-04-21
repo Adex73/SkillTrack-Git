@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './tareas.css';
 
@@ -10,8 +10,7 @@ function Tareas() {
     const [tareasOriginales, setTareasOriginales] = useState([]);
     const [entregas, setEntregas] = useState([]);
     const [formVisible, setFormVisible] = useState(false);
-    
-    // Estado para nueva tarea
+
     const [nuevaTarea, setNuevaTarea] = useState({
         titulo: '',
         descripcion: '',
@@ -36,6 +35,7 @@ function Tareas() {
         try {
             const res = await fetch(`/tareas/${idCurso}`);
             const data = await res.json();
+
             setTareas(data);
             setTareasOriginales(data);
 
@@ -67,6 +67,7 @@ function Tareas() {
                     usuarioId: usuario.id
                 })
             });
+
             setFormVisible(false);
             setNuevaTarea({ titulo: '', descripcion: '', fecha: '' });
             cargarDatos(cursoId, usuario);
@@ -89,7 +90,11 @@ function Tareas() {
             await fetch("/entregas", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ tareaId, estudianteId: usuario.id, archivo: data.url })
+                body: JSON.stringify({
+                    tareaId,
+                    estudianteId: usuario.id,
+                    archivo: data.url
+                })
             });
 
             alert("✅ Tarea entregada");
@@ -98,17 +103,31 @@ function Tareas() {
             alert("Error al subir archivo");
         }
     };
-
-    const filtrar = (tipo) => {
+    
+const filtrar = (tipo) => {
         const hoy = new Date();
+
         const filtradas = tareasOriginales.filter(t => {
-            const entregada = entregas.find(e => e.tareaId === t._id);
-            if (tipo === 'entregado') return entregada;
-            if (tipo === 'vencida') return !entregada && new Date(t.fechaLimite) < hoy;
+            const entregada = entregas.find(
+                e => String(e.tareaId) === String(t._id)
+            );
+
+            if (tipo === "entregado") return !!entregada;
+
+            if (tipo === "vencida") {
+                return !entregada && new Date(t.fechaLimite) < hoy;
+            }
+
+            if (tipo === "pendiente") {
+                return !entregada && new Date(t.fechaLimite) >= hoy;
+            }
+
             return true;
         });
+
         setTareas(filtradas);
     };
+
 
     const logout = () => {
         localStorage.removeItem("usuario");
@@ -126,81 +145,94 @@ function Tareas() {
                         <h3>{usuario.nombre}</h3>
                         <p>{usuario.rol}</p>
                     </div>
+
                     <ul className="nav-links">
-                        <li><Link to="/mis-cursos"><i className="fas fa-arrow-left"></i> Volver</Link></li>
-                        <li><Link to="/mis-cursos/datos-curso"><i className="fas fa-stream"></i> Contenido</Link></li>
-                        <li><Link to="/tareas" className="active"><i className="fas fa-tasks"></i> Tareas</Link></li>
+                        <li><Link to="/mis-cursos">Volver</Link></li>
+                        <li><Link to="/mis-cursos/datos-curso">Contenido</Link></li>
+                        <li><Link to="/tareas" className="active">Tareas</Link></li>
                     </ul>
                 </div>
+
                 <div className="logout">
-                    <a href="#!" onClick={logout}><i className="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+                    <a href="#!" onClick={logout}>Cerrar Sesión</a>
                 </div>
             </div>
 
             <div className="main-content">
                 <div className="topbar">
-                    <h1><i className="fas fa-tasks"></i> Tareas del Curso</h1>
+                    <h1>Tareas del Curso</h1>
+
                     {usuario.rol === "profesor" && (
-                        <button className="primary-btn" onClick={() => setFormVisible(true)}>
-                            <i className="fas fa-plus"></i> Nueva tarea
+                        <button onClick={() => setFormVisible(true)}>
+                            Nueva tarea
                         </button>
                     )}
                 </div>
 
+                {/* FILTROS */}
                 <div className="filters">
-                    <button onClick={() => setTareas(tareasOriginales)}>Activas</button>
-                    <button onClick={() => filtrar('entregado')}>Entregadas</button>
-                    <button onClick={() => filtrar('vencida')}>Vencidas</button>
+                    <button onClick={() => filtrar("pendiente")}>Activas</button>
+                    <button onClick={() => filtrar("entregado")}>Entregadas</button>
+                    <button onClick={() => filtrar("vencida")}>Vencidas</button>
                 </div>
 
+                {/* FORM */}
                 {formVisible && (
                     <div className="form-box">
-                        <h3>Nueva tarea</h3>
-                        <input type="text" placeholder="Título" value={nuevaTarea.titulo} 
-                            onChange={e => setNuevaTarea({...nuevaTarea, titulo: e.target.value})} />
-                        <textarea placeholder="Descripción" value={nuevaTarea.descripcion}
-                            onChange={e => setNuevaTarea({...nuevaTarea, descripcion: e.target.value})} />
-                        <input type="date" value={nuevaTarea.fecha}
-                            onChange={e => setNuevaTarea({...nuevaTarea, fecha: e.target.value})} />
-                        <div className="form-actions">
-                            <button className="primary-btn" onClick={crearTarea}>Guardar</button>
-                            <button className="secondary-btn" onClick={() => setFormVisible(false)}>Cancelar</button>
-                        </div>
+                        <input
+                            type="text"
+                            placeholder="Título"
+                            value={nuevaTarea.titulo}
+                            onChange={e => setNuevaTarea({ ...nuevaTarea, titulo: e.target.value })}
+                        />
+
+                        <textarea
+                            placeholder="Descripción"
+                            value={nuevaTarea.descripcion}
+                            onChange={e => setNuevaTarea({ ...nuevaTarea, descripcion: e.target.value })}
+                        />
+
+                        <input
+                            type="date"
+                            value={nuevaTarea.fecha}
+                            onChange={e => setNuevaTarea({ ...nuevaTarea, fecha: e.target.value })}
+                        />
+
+                        <button onClick={crearTarea}>Guardar</button>
+                        <button onClick={() => setFormVisible(false)}>Cancelar</button>
                     </div>
                 )}
 
+                {/* LISTA */}
                 <div className="tasks-container">
                     {tareas.length === 0 ? (
-                        <p style={{ color: '#cbd5ff' }}>No hay tareas disponibles.</p>
+                        <p>No hay tareas</p>
                     ) : (
                         tareas.map(t => {
                             const hoy = new Date();
-                            const entregada = entregas.find(e => e.tareaId === t._id);
+
+                            const entregada = entregas.find(
+                                e => String(e.tareaId) === String(t._id)
+                            );
+
                             let estado = "pendiente";
+
                             if (entregada) estado = "entregado";
                             else if (new Date(t.fechaLimite) < hoy) estado = "vencida";
 
                             return (
                                 <div key={t._id} className={`task-card ${estado}`}>
-                                    <div className="task-header">
-                                        <h3>{t.titulo}</h3>
-                                        <span className={`status ${estado}`}>{estado.toUpperCase()}</span>
-                                    </div>
-                                    <div className="task-body">
-                                        <p>{t.descripcion}</p>
-                                        <p><i className="fas fa-calendar-alt"></i> {new Date(t.fechaLimite).toLocaleDateString()}</p>
-                                    </div>
-                                    <div className="task-footer">
-                                        {usuario.rol === "estudiante" && estado === "pendiente" && (
-                                            <input type="file" className="file-input" onChange={e => subirArchivo(e, t._id)} />
-                                        )}
-                                        {estado === "entregado" && (
-                                            <button className="secondary-btn"><i className="fas fa-check"></i> Entregado</button>
-                                        )}
-                                        {estado === "vencida" && (
-                                            <button className="disabled-btn"><i className="fas fa-lock"></i> Cerrada</button>
-                                        )}
-                                    </div>
+                                    <h3>{t.titulo}</h3>
+                                    <span>{estado}</span>
+
+                                    <p>{t.descripcion}</p>
+
+                                    {usuario.rol === "estudiante" && estado === "pendiente" && (
+                                        <input type="file" onChange={e => subirArchivo(e, t._id)} />
+                                    )}
+
+                                    {estado === "entregado" && <p>✔ Entregado</p>}
+                                    {estado === "vencida" && <p>❌ Cerrada</p>}
                                 </div>
                             );
                         })

@@ -17,15 +17,6 @@ if (!fs.existsSync("./uploads")) {
     fs.mkdirSync("./uploads");
 }
 
-// Servir frontend
-app.use(express.static(path.join(__dirname, "../build")));
-
-// Rutas de la API van aquí...
-
-// Manejar cualquier otra ruta devolviendo el index.html de React (para que React Router funcione)
-app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../build", "index.html"));
-});
 
 // CONEXIÓN A MONGODB
 mongoose.connect("mongodb://localhost:27017/skilltrack")
@@ -802,6 +793,18 @@ app.get("/entregas/:estudianteId", async (req, res) => {
     }
 });
 
+
+
+
+// Servir frontend
+app.use(express.static(path.join(__dirname, "../build")));
+
+// Rutas de la API van aquí...
+
+// Manejar cualquier otra ruta devolviendo el index.html de React (para que React Router funcione)
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../build", "index.html"));
+});
 
 // =======================
 // INICIAR SERVIDOR
