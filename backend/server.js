@@ -793,8 +793,161 @@ app.get("/entregas/:estudianteId", async (req, res) => {
     }
 });
 
+app.get("/reportes/cursos-alumnos/txt", async (req, res) => {
+    try {
+        const cursos = await Curso.find()
+            .populate("profesorId", "nombre")
+            .populate("carreraId", "nombre");
+
+        let contenido = "REPORTE: CURSOS Y ALUMNOS\n\n";
+
+        for (const curso of cursos) {
+            const totalAlumnos = await Inscripcion.countDocuments({
+                cursoId: curso._id
+            });
+
+            contenido += `
+Curso: ${curso.nombre}
+Grupo: ${curso.grupo}
+Profesor: ${curso.profesorId?.nombre || "N/A"}
+Carrera: ${curso.carreraId?.nombre || "N/A"}
+Total alumnos: ${totalAlumnos}
+-----------------------------
+`;
+        }
+
+        const filePath = "./reportes_cursos_alumnos.txt";
+        fs.writeFileSync(filePath, contenido);
+
+        res.download(filePath);
+
+    } catch (error) {
+        res.status(500).json({ error: "Error generando reporte TXT" });
+    }
+});
+
+app.get("/reportes/alumnos-universidad/txt", async (req, res) => {
+    try {
+        const universidades = await Universidad.find();
+
+        let contenido = "REPORTE: ALUMNOS POR UNIVERSIDAD\n\n";
+
+        for (const uni of universidades) {
+
+            const cursos = await Curso.find({ universidadId: uni._id });
+            const cursoIds = cursos.map(c => c._id);
+
+            const inscripciones = await Inscripcion.find({
+                cursoId: { $in: cursoIds }
+            });
+
+            const alumnosUnicos = new Set(
+                inscripciones.map(i => i.estudianteId.toString())
+            );
+
+            contenido += `
+Universidad: ${uni.nombre}
+Total alumnos inscritos: ${alumnosUnicos.size}
+-----------------------------
+`;
+        }
+
+        res.setHeader("Content-Type", "text/plain");
+        res.setHeader("Content-Disposition", "attachment; filename=alumnos_universidad.txt");
+
+        res.send(contenido);
+
+    } catch (error) {
+        res.status(500).json({ error: "Error reporte universidad" });
+    }
+});
+
+app.get("/reportes/rendimiento-cursos/txt", async (req, res) => {
+    try {
+
+        const cursos = await Curso.find();
+
+        let contenido = "REPORTE: RENDIMIENTO DE CURSOS\n\n";
+
+        for (const curso of cursos) {
+
+            const tareas = await Tarea.find({ cursoId: curso._id });
+
+            const entregas = await Entrega.find({
+                tareaId: { $in: tareas.map(t => t._id) }
+            });
+
+            contenido += `
+Curso: ${curso.nombre}
+Total tareas: ${tareas.length}
+Total entregas: ${entregas.length}
+-----------------------------
+`;
+        }
+
+        res.setHeader("Content-Type", "text/plain");
+        res.setHeader("Content-Disposition", "attachment; filename=rendimiento_cursos.txt");
+
+        res.send(contenido);
+
+    } catch (error) {
+        res.status(500).json({ error: "Error reporte rendimiento" });
+    }
+});
 
 
+app.get("/reportes/actividad-estudiantes/txt", async (req, res) => {
+    try {
+
+        const estudiantes = await Usuario.find({ rol: "estudiante" });
+
+        let contenido = "REPORTE: ACTIVIDAD ESTUDIANTES\n\n";
+
+        for (const est of estudiantes) {
+
+            const entregas = await Entrega.find({
+                estudianteId: est._id
+            });
+
+            const ultimaEntrega = await Entrega.findOne({
+                estudianteId: est._id
+            }).sort({ fechaEntrega: -1 });
+
+            contenido += `
+Estudiante: ${est.nombre}
+Total entregas: ${entregas.length}
+Última entrega: ${ultimaEntrega?.fechaEntrega || "N/A"}
+-----------------------------
+`;
+        }
+
+        res.setHeader("Content-Type", "text/plain");
+        res.setHeader("Content-Disposition", "attachment; filename=actividad_estudiantes.txt");
+
+        res.send(contenido);
+
+    } catch (error) {
+        res.status(500).json({ error: "Error reporte estudiantes" });
+    }
+});
+
+app.get("/reportes/stats", async (req, res) => {
+    try {
+
+        const estudiantes = await Usuario.countDocuments({ rol: "estudiante" });
+        const profesores = await Usuario.countDocuments({ rol: "profesor" });
+        const cursos = await Curso.countDocuments({ activo: true });
+
+        res.json({
+            estudiantes,
+            profesores,
+            cursos
+        });
+
+    } catch (error) {
+        res.status(500).json({ error: "Error obteniendo stats" });
+    }
+});
 
 // Servir frontend
 app.use(express.static(path.join(__dirname, "../build")));
