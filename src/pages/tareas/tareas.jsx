@@ -147,9 +147,12 @@ const filtrar = (tipo) => {
                     </div>
 
                     <ul className="nav-links">
-                        <li><Link to="/mis-cursos">Volver</Link></li>
-                        <li><Link to="/mis-cursos/datos-curso">Contenido</Link></li>
-                        <li><Link to="/tareas" className="active">Tareas</Link></li>
+                         <li><Link to="/mis-cursos"><i className="fas fa-arrow-left"></i> Volver</Link></li>
+                         <li><Link to="/mis-cursos/datos-curso"><i className="fas fa-stream"></i> Contenido</Link></li>
+                         <li><Link to="/tareas" className="active"><i className="fas fa-tasks"></i> Tareas</Link></li>
+                         <li><Link to="/calificaciones"><i className="fas fa-chart-bar"></i> Calificaciones</Link></li>
+                         <li><Link to="/reportes"><i className="fas fa-chart-line"></i> Reportes</Link></li>
+                         <li><Link to="/inscripciones"><i className="fas fa-user-plus"></i> Inscripciones</Link></li>
                     </ul>
                 </div>
 

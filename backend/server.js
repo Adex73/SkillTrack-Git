@@ -180,6 +180,43 @@ const EntregaSchema = new mongoose.Schema({
 });
 
 const Entrega = mongoose.model("Entrega", EntregaSchema);
+
+const CalificacionSchema = new mongoose.Schema({
+    tareaId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Tarea",
+        required: true
+    },
+
+    estudianteId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Usuario",
+        required: true
+    },
+
+    profesorId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Usuario",
+        required: true
+    },
+
+    calificacion: {
+        type: Number,
+        required: true
+    },
+
+    comentario: {
+        type: String,
+        default: ""
+    },
+
+    fecha: {
+        type: Date,
+        default: Date.now
+    }
+});
+
+const Calificacion = mongoose.model("Calificacion", CalificacionSchema);
 // ==========================================================================================================================================
 // RUTAS
 // ==========================================================================================================================================
@@ -946,6 +983,135 @@ app.get("/reportes/stats", async (req, res) => {
 
     } catch (error) {
         res.status(500).json({ error: "Error obteniendo stats" });
+    }
+});
+
+//CALIFICACIONES.................................................................................................................................................
+// PANEL DE CALIFICACIONES DE UN ALUMNO ESPECÍFICO
+app.get("/calificaciones/profesor/:cursoId/:alumnoId", async (req, res) => {
+    try {
+
+        const { cursoId, alumnoId } = req.params;
+
+        // Tareas del curso
+        const tareas = await Tarea.find({ cursoId });
+
+        // Entregas del alumno
+        const entregas = await Entrega.find({
+            estudianteId: alumnoId
+        });
+
+        // Calificaciones del alumno
+        const calificaciones = await Calificacion.find({
+            estudianteId: alumnoId
+        });
+
+        // Combinar datos
+        const resultado = tareas.map((tarea) => {
+
+            const entrega = entregas.find(
+                e => e.tareaId.toString() === tarea._id.toString()
+            );
+
+            const calificacion = calificaciones.find(
+                c => c.tareaId.toString() === tarea._id.toString()
+            );
+
+            let estado = "Pendiente";
+
+            if (entrega) {
+                estado = "Entregada";
+            }
+            else if (new Date(tarea.fechaLimite) < new Date()) {
+                estado = "Vencida";
+            }
+
+            return {
+                tareaId: tarea._id,
+                titulo: tarea.titulo,
+                fechaLimite: tarea.fechaLimite,
+                estado,
+                entrega,
+                calificacion
+            };
+        });
+
+        // Promedio
+        let promedio = 0;
+
+        if (calificaciones.length > 0) {
+
+            const suma = calificaciones.reduce(
+                (acc, item) => acc + item.calificacion,
+                0
+            );
+
+            promedio = (
+                suma / calificaciones.length
+            ).toFixed(1);
+        }
+
+        res.json({
+            tareas: resultado,
+            promedio
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            error: "Error al obtener panel del alumno"
+        });
+    }
+});
+
+// LISTA DE ALUMNOS CON PROMEDIO
+app.get("/calificaciones/profesor-resumen/:cursoId", async (req, res) => {
+    try {
+
+        const inscripciones = await Inscripcion.find({
+            cursoId: req.params.cursoId
+        })
+        .populate("estudianteId", "nombre email matricula");
+
+        const resultado = [];
+
+        for (const inscripcion of inscripciones) {
+
+            const calificaciones = await Calificacion.find({
+                estudianteId: inscripcion.estudianteId._id
+            });
+
+            let promedio = 0;
+
+            if (calificaciones.length > 0) {
+
+                const suma = calificaciones.reduce(
+                    (acc, item) => acc + item.calificacion,
+                    0
+                );
+
+                promedio = (
+                    suma / calificaciones.length
+                ).toFixed(1);
+            }
+
+            resultado.push({
+                alumno: inscripcion.estudianteId,
+                promedio
+            });
+        }
+
+        res.json(resultado);
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            error: "Error al obtener resumen"
+        });
     }
 });
 

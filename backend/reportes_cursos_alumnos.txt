@@ -1,0 +1,9 @@
+REPORTE: CURSOS Y ALUMNOS
+
+
+Curso: Programacion Web 2
+Grupo: 52
+Profesor: Sebastian Rubio
+Carrera: Multimedia y Animacion
+Total alumnos: 2
+-----------------------------
